@@ -26,7 +26,8 @@ def main():
             msg = b""
             if len(split_url) > 2:
                 for url_piece in split_url[2:]:
-                    msg += url_piece
+                    msg += b"/" + url_piece
+                    msg = msg[1:]
 
             conn.send(HTTP_200_OK + build_response(msg))
             conn.close()
