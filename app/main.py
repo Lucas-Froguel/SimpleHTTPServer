@@ -1,7 +1,7 @@
 
 import socket
 
-from app.http_codes import HTTP_200_OK, HTP_404_NOT_FOUND
+from app.http_codes import HTTP_200_OK, HTTP_404_NOT_FOUND
 from app.urls import valid_urls
 
 ADDRESS = "localhost"
@@ -20,16 +20,16 @@ def main():
             split_url = url.split(b"/")
 
             if not is_url_valid(split_url[1]):
-                conn.send(HTP_404_NOT_FOUND)
+                conn.send(HTTP_404_NOT_FOUND)
                 conn.close()
+                continue
 
             msg = b""
-            if len(split_url) > 2:
-                for url_piece in split_url[2:]:
-                    msg += b"/" + url_piece
-                msg = msg[1:]
+            if url.startswith(b"/echo/"):
+                msg = url.replace(b"/echo/", b"")
 
-            conn.send(HTTP_200_OK + build_response(msg))
+            response = HTTP_200_OK + build_response(msg)
+            conn.send(response)
             conn.close()
 
 
