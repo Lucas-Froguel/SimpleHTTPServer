@@ -26,7 +26,7 @@ def main():
 
                 msg = url.replace(b"/echo/", b"")
 
-                response = HTTP_200_OK + build_response_body(msg)
+                response = b"HTTP/1.1 200 OK\r\n" + build_response_body(msg)
                 conn.send(response)
 
 
