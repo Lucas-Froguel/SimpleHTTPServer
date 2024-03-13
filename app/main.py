@@ -24,12 +24,9 @@ def main():
                     conn.send(HTTP_404_NOT_FOUND)
                     continue
 
-                msg = b""
-                if url.startswith(b"/echo/"):
-                    msg = url.replace(b"/echo/", b"")
-                print(msg)
-                response = HTTP_200_OK + build_response(msg)
-                print(response)
+                msg = url.replace(b"/echo/", b"")
+
+                response = HTTP_200_OK + build_response_body(msg)
                 conn.send(response)
 
 
@@ -39,7 +36,7 @@ def is_url_valid(url: bytes) -> bool:
     return False
 
 
-def build_response(message: bytes) -> bytes:
+def build_response_body(message: bytes) -> bytes:
     response_message = (
         f"Content-Type: text/plain\r\nContent-Length: {len(message)}\r\n\r\r\n{message.decode(ENCODE_TYPE)}\r\n"
     )
