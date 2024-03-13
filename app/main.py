@@ -27,8 +27,9 @@ def main():
                 msg = b""
                 if url.startswith(b"/echo/"):
                     msg = url.replace(b"/echo/", b"")
-
+                print(msg)
                 response = HTTP_200_OK + build_response(msg)
+                print(response)
                 conn.send(response)
 
 
