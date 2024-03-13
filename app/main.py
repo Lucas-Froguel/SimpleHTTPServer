@@ -17,7 +17,16 @@ def main():
             data = conn.recv(4096)
             data = data.split(b" ")
             method, url = data[0], data[1]
-            msg = url.split(b"/")[-1]
+            split_url = url.split(b"/")
+
+            if not is_url_valid(split_url[1]):
+                conn.send(HTP_404_NOT_FOUND)
+                conn.close()
+
+            msg = b""
+            if len(split_url) > 2:
+                for url_piece in split_url[2:]:
+                    msg += url_piece
 
             conn.send(HTTP_200_OK + build_response(msg))
             conn.close()

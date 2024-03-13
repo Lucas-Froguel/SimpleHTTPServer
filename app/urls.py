@@ -1,4 +1,4 @@
 
 valid_urls = [
-    b"/"
+    b"", b"echo"
 ]
