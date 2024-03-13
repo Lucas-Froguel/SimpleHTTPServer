@@ -14,23 +14,22 @@ def main():
     while True:
         conn, addr = server_socket.accept()
         if conn:
-            data = conn.recv(4096)
-            data = data.split(b" ")
-            method, url = data[0], data[1]
-            split_url = url.split(b"/")
+            with conn:
+                data = conn.recv(4096)
+                data = data.split(b" ")
+                method, url = data[0], data[1]
+                split_url = url.split(b"/")
 
-            if not is_url_valid(split_url[1]):
-                conn.send(HTTP_404_NOT_FOUND)
-                conn.close()
-                continue
+                if not is_url_valid(split_url[1]):
+                    conn.send(HTTP_404_NOT_FOUND)
+                    continue
 
-            msg = b""
-            if url.startswith(b"/echo/"):
-                msg = url.replace(b"/echo/", b"")
+                msg = b""
+                if url.startswith(b"/echo/"):
+                    msg = url.replace(b"/echo/", b"")
 
-            response = HTTP_200_OK + build_response(msg)
-            conn.send(response)
-            conn.close()
+                response = HTTP_200_OK + build_response(msg)
+                conn.send(response)
 
 
 def is_url_valid(url: bytes) -> bool:
