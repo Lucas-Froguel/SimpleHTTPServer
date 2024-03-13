@@ -17,7 +17,9 @@ def main():
             data = conn.recv(4096)
             data = data.split(b" ")
             method, url = data[0], data[1]
-            msg = url.split(b"/")[2]
+            msg = b""
+            if b"echo" in url.split(b"/"):
+                msg = url.split(b"/")[2]
 
             conn.send(HTTP_200_OK + build_response(msg))
             conn.close()
