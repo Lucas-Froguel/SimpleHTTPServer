@@ -1,12 +1,9 @@
 
 from app.http_codes import HTTP_STATUS
+from app.settings import ENCODE_TYPE
 
 
 def index(data: bytes) -> (bytes, bytes):
-    response_message = (
-        b"Content-Type: text/plain\r\nContent-Length: 0\r\n\r\r\n"
-    )
-
     return HTTP_STATUS.HTTP_200_OK, b""
 
 
@@ -16,8 +13,8 @@ def echo(data: bytes) -> (bytes, bytes):
     msg = url.replace(b"/echo/", b"")
 
     response_message = (
-        f"Content-Type: text/plain\r\nContent-Length: {len(msg)}\r\n\r\r\n{msg.decode()}\r\n"
+        f"Content-Type: text/plain\r\nContent-Length: {len(msg)}\r\n\r\n{msg.decode(ENCODE_TYPE)}\r\n"
     )
 
-    return HTTP_STATUS.HTTP_200_OK, response_message.encode()
+    return HTTP_STATUS.HTTP_200_OK, response_message.encode(ENCODE_TYPE)
 

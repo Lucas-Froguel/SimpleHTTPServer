@@ -3,11 +3,7 @@ import socket
 
 from app.urls import router
 from app.connection import Connection
-
-
-ADDRESS = "localhost"
-PORT = 4221
-ENCODE_TYPE = "utf-8"
+from app.settings import ADDRESS, PORT
 
 
 def main():
@@ -20,7 +16,7 @@ def main():
                 conn_obj.read_data()
                 conn_obj.set_url()
 
-                response = conn_obj.parse_url()
+                response = conn_obj.parse_request()
                 conn_obj.send_response(response)
 
 

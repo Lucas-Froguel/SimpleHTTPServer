@@ -23,7 +23,7 @@ class Connection:
     def set_url(self) -> None:
         self.method, self.url = self.split_data[0], self.split_data[1]
 
-    def parse_url(self):
+    def parse_request(self):
         split_url = self.url.split(b"/")
 
         if not self.router.is_url_valid(split_url[1].decode()):
