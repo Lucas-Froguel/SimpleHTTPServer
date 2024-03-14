@@ -42,7 +42,7 @@ def files(data: bytes, directory: str = None):
         return HTTP_STATUS.HTTP_404_NOT_FOUND, b""
 
     response_message = (
-        f"Content-Type: text/plain\r\nContent-Length: {len(msg)}\r\n\r\n{msg}\r\n"
+        f"Content-Type: application/octet-stream\r\nContent-Length: {len(msg)}\r\n\r\n{msg}\r\n"
     )
 
     return HTTP_STATUS.HTTP_200_OK, response_message.encode(ENCODE_TYPE)
