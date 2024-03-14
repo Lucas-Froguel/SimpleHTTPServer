@@ -1,8 +1,8 @@
-import socket
+
 from socket import socket
 
 from app.router import Router
-from http_codes import HTTP_STATUS
+from app.http_codes import HTTP_STATUS
 
 
 class Connection:
