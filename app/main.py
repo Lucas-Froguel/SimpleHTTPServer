@@ -1,6 +1,6 @@
 
 import socket
-from multiprocessing import Process
+from threading import Thread
 
 from app.urls import router
 from app.connection import Connection
@@ -12,8 +12,8 @@ def main():
     while True:
         conn, addr = server_socket.accept()
         if conn:
-            p = Process(target=process_connection, args=(conn, addr))
-            p.run()
+            p = Thread(target=process_connection, args=(conn, addr), daemon=True)
+            p.start()
 
 
 def process_connection(conn, addr):
