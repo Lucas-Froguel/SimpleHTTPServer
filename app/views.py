@@ -49,11 +49,12 @@ def files(data: bytes, directory: str = None, method: str = None):
 
         return HTTP_STATUS.HTTP_200_OK, response_message.encode(ENCODE_TYPE)
     elif method == b"POST":
-        content = ""
+        content = b""
         split_content = data.split(b"\r\n")[7:]
         for msg in split_content:
-            content += msg.decode(ENCODE_TYPE)
-        with open(directory + file, "w") as fl:
+            content += msg
+        print(content)
+        with open(directory + file, "wb") as fl:
             print(content)
             fl.write(content)
 
