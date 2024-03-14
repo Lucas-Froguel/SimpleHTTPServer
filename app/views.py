@@ -31,18 +31,29 @@ def user_agent(data: bytes, **kwargs) -> (bytes, bytes):
     return HTTP_STATUS.HTTP_200_OK, response_message.encode(ENCODE_TYPE)
 
 
-def files(data: bytes, directory: str = None):
+def files(data: bytes, directory: str = None, method: str = None):
     split_data = data.split(b" ")
     url = split_data[1]
     file = url.replace(b"/files", b"").decode(ENCODE_TYPE)
-    try:
+
+    if method == b"GET":
+        try:
+            with open(directory + file, "r") as fl:
+                msg = fl.read()
+        except FileNotFoundError:
+            return HTTP_STATUS.HTTP_404_NOT_FOUND, b""
+
+        response_message = (
+            f"Content-Type: application/octet-stream\r\nContent-Length: {len(msg)}\r\n\r\n{msg}\r\n"
+        )
+
+        return HTTP_STATUS.HTTP_200_OK, response_message.encode(ENCODE_TYPE)
+    elif method == b"POST":
+        content = ""
+        split_content = data.split(b"\r\n")[7:]
+        for msg in split_content:
+            content += msg.decode(ENCODE_TYPE)
         with open(directory + file, "r") as fl:
-            msg = fl.read()
-    except FileNotFoundError:
-        return HTTP_STATUS.HTTP_404_NOT_FOUND, b""
+            fl.write(content)
 
-    response_message = (
-        f"Content-Type: application/octet-stream\r\nContent-Length: {len(msg)}\r\n\r\n{msg}\r\n"
-    )
-
-    return HTTP_STATUS.HTTP_200_OK, response_message.encode(ENCODE_TYPE)
+        return HTTP_STATUS.HTTP_201_CREATED, b""

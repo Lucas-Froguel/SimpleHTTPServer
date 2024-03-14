@@ -30,7 +30,7 @@ class Connection:
             status = HTTP_STATUS.HTTP_404_NOT_FOUND
             body = b""
         else:
-            status, body = self.router.get_view(split_url[1].decode())(self.data, **arg)
+            status, body = self.router.get_view(split_url[1].decode())(self.data, method=self.method, **arg)
 
         response = status + body + b"\r\n"
 
