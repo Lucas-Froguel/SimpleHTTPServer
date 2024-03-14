@@ -1,8 +1,9 @@
 
 import socket
 
-from app.http_codes import HTTP_200_OK, HTTP_404_NOT_FOUND
-from app.urls import valid_urls
+from app.urls import router
+from app.connection import Connection
+
 
 ADDRESS = "localhost"
 PORT = 4221
@@ -15,33 +16,12 @@ def main():
         conn, addr = server_socket.accept()
         if conn:
             with conn:
-                data = conn.recv(4096)
-                data = data.split(b" ")
-                method, url = data[0], data[1]
-                split_url = url.split(b"/")
+                conn_obj = Connection(conn, router)
+                conn_obj.read_data()
+                conn_obj.set_url()
 
-                if not is_url_valid(split_url[1]):
-                    conn.send(HTTP_404_NOT_FOUND)
-                    continue
-
-                msg = url.replace(b"/echo/", b"")
-
-                response = b"HTTP/1.1 200 OK\r\n" + build_response_body(msg)
-                conn.send(response)
-
-
-def is_url_valid(url: bytes) -> bool:
-    if url in valid_urls:
-        return True
-    return False
-
-
-def build_response_body(message: bytes) -> bytes:
-    response_message = (
-        f"Content-Type: text/plain\r\nContent-Length: {len(message)}\r\n\r\r\n{message.decode(ENCODE_TYPE)}\r\n"
-    )
-
-    return response_message.encode(ENCODE_TYPE)
+                response = conn_obj.parse_url()
+                conn_obj.send_response(response)
 
 
 if __name__ == "__main__":
