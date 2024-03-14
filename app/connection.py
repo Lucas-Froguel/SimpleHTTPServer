@@ -23,14 +23,14 @@ class Connection:
     def set_url(self) -> None:
         self.method, self.url = self.split_data[0], self.split_data[1]
 
-    def parse_request(self):
+    def parse_request(self, arg: dict = None):
         split_url = self.url.split(b"/")
 
         if not self.router.is_url_valid(split_url[1].decode()):
             status = HTTP_STATUS.HTTP_404_NOT_FOUND
             body = b""
         else:
-            status, body = self.router.get_view(split_url[1].decode())(self.data)
+            status, body = self.router.get_view(split_url[1].decode())(self.data, **arg)
 
         response = status + body + b"\r\n"
 
