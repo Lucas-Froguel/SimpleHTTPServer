@@ -1,5 +1,6 @@
 
 import socket
+from multiprocessing import Process
 
 from app.urls import router
 from app.connection import Connection
@@ -11,13 +12,18 @@ def main():
     while True:
         conn, addr = server_socket.accept()
         if conn:
-            with conn:
-                conn_obj = Connection(conn, router)
-                conn_obj.read_data()
-                conn_obj.set_url()
+            p = Process(target=process_connection, args=(conn, addr))
+            p.run()
 
-                response = conn_obj.parse_request()
-                conn_obj.send_response(response)
+
+def process_connection(conn, addr):
+    with conn:
+        conn_obj = Connection(conn, router)
+        conn_obj.read_data()
+        conn_obj.set_url()
+
+        response = conn_obj.parse_request()
+        conn_obj.send_response(response)
 
 
 if __name__ == "__main__":
