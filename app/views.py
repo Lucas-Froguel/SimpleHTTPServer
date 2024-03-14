@@ -53,7 +53,8 @@ def files(data: bytes, directory: str = None, method: str = None):
         split_content = data.split(b"\r\n")[7:]
         for msg in split_content:
             content += msg.decode(ENCODE_TYPE)
-        with open(directory + file, "w+") as fl:
+        with open(directory + file, "w") as fl:
+            print(content)
             fl.write(content)
 
         return HTTP_STATUS.HTTP_201_CREATED, b""
