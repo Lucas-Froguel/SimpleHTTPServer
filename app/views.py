@@ -7,7 +7,7 @@ def index(data: bytes) -> (bytes, bytes):
         b"Content-Type: text/plain\r\nContent-Length: 0\r\n\r\r\n"
     )
 
-    return HTTP_STATUS.HTTP_200_OK, response_message
+    return HTTP_STATUS.HTTP_200_OK, b""
 
 
 def echo(data: bytes) -> (bytes, bytes):
